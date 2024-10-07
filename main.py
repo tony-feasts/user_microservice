@@ -9,19 +9,21 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 # Database connection configuration
 db_config = {
-    'user': 'admin',
+    'user': 'admin',  # Replace with your actual database username
     'password': DB_PASSWORD,
-    'host': 'cloudproject.crimg8c22499.us-east-2.rds.amazonaws.com',
-    'database': 'user',
+    'host': 'cloudproject.crimg8c22499.us-east-2.rds.amazonaws.com',  # Replace with your RDS endpoint
+    'database': 'user',  # Replace with your actual database name
 }
 
 # Initialize FastAPI app
 app = FastAPI()
 
+# CORS middleware configuration
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # Adjust as needed for your frontend's domain
     allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Password hashing context using Argon2
@@ -52,9 +54,11 @@ def sign_up(credentials: UserCredentials):
         conn.close()
         return {"message": "You are now signed up"}
     except mysql.connector.IntegrityError:
+        # Handle duplicate username error
         raise HTTPException(status_code=400, detail="Username already exists")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Handle other exceptions
+        raise HTTPException(status_code=500, detail="An internal error occurred.")
 
 # API endpoint for user login
 @app.post("/login")
@@ -72,6 +76,11 @@ def login(credentials: UserCredentials):
         if result and pwd_context.verify(password, result[0]):
             return {"message": "You are logged in"}
         else:
+            # Invalid credentials
             raise HTTPException(status_code=400, detail="Invalid username or password")
+    except HTTPException as e:
+        # Re-raise HTTPExceptions to allow FastAPI to handle them
+        raise e
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Handle other exceptions
+        raise HTTPException(status_code=500, detail="An internal error occurred.")
