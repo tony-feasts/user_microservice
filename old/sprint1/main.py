@@ -9,10 +9,10 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 # Database connection configuration
 db_config = {
-    'user': 'admin',  # Replace with your actual database username
+    'user': 'admin',
     'password': DB_PASSWORD,
-    'host': 'cloudproject.crimg8c22499.us-east-2.rds.amazonaws.com',  # Replace with your RDS endpoint
-    'database': 'user',  # Replace with your actual database name
+    'host': 'cloudproject.crimg8c22499.us-east-2.rds.amazonaws.com',
+    'database': 'user',
 }
 
 # Initialize FastAPI app
