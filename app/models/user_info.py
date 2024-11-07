@@ -7,4 +7,4 @@ from app.models.link import Link
 class UserInfo(BaseModel):
     username: str
     password: str
-    links: List[Link] = None # Might not need
+    links: List[Link] = None
