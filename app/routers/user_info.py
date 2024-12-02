@@ -1,16 +1,16 @@
 # app/routers/user_info.py
 
 from fastapi import APIRouter, HTTPException, Request
-from app.models import Link, UserInfo, UsernameChangeRequest, user_info
+from app.models import Link, UserInfo, UsernameChangeRequest
 from app.resources.user_info_resource import UserInfoResource
 
 router = APIRouter()
 user_info_resource = UserInfoResource()
 
-@router.get('user_info/', response_model=UserInfo)
-def login(user_info: UserInfo, request: Request):
-    user = user_info_resource.get_by_key(user_info.username)
-    if not user or not user_info.password == user.password:
+@router.get('/user_info/{username}/{password}', response_model=UserInfo)
+def login(username: str, password: str, request: Request):
+    user = user_info_resource.get_by_key(username)
+    if not user or not password == user.password:
         raise HTTPException(status_code=401,
                             detail='Invalid username or password')
     user.links = [Link(rel='self', href=str(request.url))]
