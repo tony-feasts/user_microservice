@@ -3,3 +3,9 @@ uvicorn==0.31.0
 mysql-connector-python==9.0.0
 pydantic==2.9.2
 python-dotenv==1.0.0
+PyJWT==2.10.1
+google-cloud-logging
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-instrumentation-fastapi
+opentelemetry-instrumentation-httpx

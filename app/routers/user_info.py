@@ -3,7 +3,14 @@
 from fastapi import APIRouter, HTTPException, Request
 from app.models import Link, UserInfo, UsernameChangeRequest
 from app.resources.user_info_resource import UserInfoResource
+import jwt
+import os
+from dotenv import load_dotenv
 
+ALGORITHM = "HS256"
+
+load_dotenv()
+SECRET_KEY = os.getenv("SECRET_KEY")
 router = APIRouter()
 user_info_resource = UserInfoResource()
 
@@ -16,12 +23,20 @@ def login(username: str, password: str, request: Request):
     user.links = [Link(rel='self', href=str(request.url))]
     return user
 
+@router.get('/user_info/{username}')
+def exists(username: str):
+    if not user_info_resource.get_by_key(username): return False
+    return True
+
 @router.post('/user_info/')
 def signup(user_info: UserInfo):
     if user_info_resource.get_by_key(user_info.username):
         raise HTTPException(status_code=400, detail='User already exists')
     user_info_resource.create(user_info)
-    return {'message': 'User signed up'}
+    token = jwt.encode(
+        {"sub": user_info.username, "permissions": ["access_game_records"]},
+        SECRET_KEY, algorithm=ALGORITHM)
+    return {"token": token}
 
 @router.put('/user_info/')
 def change_name(name_change: UsernameChangeRequest):

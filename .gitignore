@@ -3,3 +3,8 @@ __pycache__
 .idea/
 user_vm_key.pem
 .env
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
